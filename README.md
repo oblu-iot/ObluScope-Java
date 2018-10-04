@@ -7,11 +7,14 @@ Animating 3D Rotatory Motion
 
 ObluScope is a Java based R&D tool for oblu, which allows data logging and analysis. It is useful for STEM experiments. ObluScope acquires and plots real-time motion data, i.e. 3-axis acceleration and 3-axis angular rotation speed, from oblu via USB. It also saves acquired data in logfile.
 
-Used below dependencies:
+Following dependencies are used in implementation::
  - RXTX jar and native library from http://fizzed.com/oss/rxtx-for-java 
  - JOGL jar from https://jogamp.org/wiki/index.php/Downloading_and_installing_JOGL
 
 RXTX - a Java cross platform wrapper library for the serial port
 
 JOGL - Java OpenGL (JOGL) is a wrapper library that allows OpenGL to be used in the Java programming language.
+
+
+[How to run the project in Netbeans](https://github.com/oblu-iot/ObluScope-Java/blob/master/How%20to%20run%20the%20project%20in%20Netbeans%20IDE.pdf)
 
