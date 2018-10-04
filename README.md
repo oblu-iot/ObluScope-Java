@@ -13,4 +13,4 @@ RXTX - a Java cross platform wrapper library for the serial port
 
 JOGL - Java OpenGL (JOGL) is a wrapper library that allows OpenGL to be used in the Java programming language.
 
-![](https://inertialelements.com/oblu/obluscope-java/obluscope.gif)
+![obluscope](https://user-images.githubusercontent.com/28668338/46465596-a6d23680-c7e6-11e8-8d7f-ab13011daca3.gif)
