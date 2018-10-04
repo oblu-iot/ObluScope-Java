@@ -12,3 +12,5 @@ Download and add below dependencies:
 RXTX - a Java cross platform wrapper library for the serial port
 
 JOGL - Java OpenGL (JOGL) is a wrapper library that allows OpenGL to be used in the Java programming language.
+
+![alt text](https://raw.githubusercontent.com/oblu-iot/ObluScope-Java/master/images/oblu.bmp)
