@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 
 
 public class Utilities {
-    public static File createNewFile(String sample_freq) {
+    public static DataLogger createNewFile(String sample_freq) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
         Date now = new Date();
         File root = new File("data");
@@ -39,14 +39,16 @@ public class Utilities {
         }
         String logFileName = sample_freq+"Hz_" + formatter.format(now) + ".txt";
         File nonPDRFile = new File(root, logFileName);
-        
+        DataLogger dataLogger = new DataLogger(nonPDRFile);
 //        System.out.println("File full path: "+nonPDRFile.getAbsolutePath());
         if(Constants.check_log){
+            dataLogger.start();
             System.out.println("Log file's full path: "+nonPDRFile.getAbsolutePath());
             String header = String.format("%12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \n\n\n ", "PKT_No.", "TimeStamp", "ax(m/s^2)", "ay(m/s^2)", "az(m/s^2)", "gx(rad/s)", "gy(rad/s)", "gz(rad/s)");
             writeNonPDRData(nonPDRFile,header);
         }
-        return nonPDRFile;
+       
+        return dataLogger;
     }
       
     public static void writeNonPDRData(File nonPDRFile, String data){

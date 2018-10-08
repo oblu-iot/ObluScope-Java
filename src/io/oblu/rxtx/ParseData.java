@@ -17,9 +17,14 @@ made
 package io.oblu.rxtx;
 
 import io.oblu.cube.JOGL3dCube;
+import static io.oblu.rxtx.TwoWaySerialComm.dataLogger;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
@@ -55,7 +60,7 @@ public class ParseData {
     float thetagz = 0.0f;
     
 
-    public ParseData() 
+    public ParseData(final TwoWaySerialComm twoWaySerialComm) 
     {
         JFrame window = new JFrame("oblu - an open platform for wearable motion sensing");
         window.setContentPane(panel);
@@ -64,6 +69,20 @@ public class ParseData {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
         panel.requestFocusInWindow();
+        window.addWindowListener( new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                twoWaySerialComm.sendData(Constants.pro_off);
+                twoWaySerialComm.sendData(Constants.sys_off);
+                dataLogger.stopLogging();
+                try {
+                    dataLogger.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ParseData.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.exit(0);
+            }
+        } );
     }
     
     public void  get_plot_normal()
@@ -98,10 +117,9 @@ public class ParseData {
                         counterNormal = 0;
                         pkt_receive++;
                         previousPkt = pktNum;
-                        if (Constants.check_log && TwoWaySerialComm.nonPDRFile != null) 
+                         if (Constants.check_log && TwoWaySerialComm.dataLogger != null) 
                         {
-                            String toFile = String.format("%12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \n ",String.valueOf(pktNum), dfTime.format(timeStamp), df.format(ax), df.format(ay), df.format(az), df.format(gx), df.format(gy), df.format(gz));
-                            Utilities.writeNonPDRData(TwoWaySerialComm.nonPDRFile,toFile);
+                            dataLogger.addData(new AccGyro(pktNum, timeStamp, ax, ay, az, gx, gy, gz));
                         }
                     }
                     buffer = final_buffer(Constants.DATA_LEN);

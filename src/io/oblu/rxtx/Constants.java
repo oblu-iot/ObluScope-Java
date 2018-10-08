@@ -32,8 +32,8 @@ public class Constants {
     public static float OUTRATE = 0.0f;
     public static String send = "0x41 0x03 0x00 0x43";  // Uncomment in case NON PDR
     public static String DATA_TYPE =  NON_PDR ;           // In case NON PDR , change to PDR to NON_PDR
-//    public static final String pro_off = "0x32 0x00 0x32";         //stopThread all processing
-//    public static final String sys_off = "0x22 0x00 0x22";         //stopThread all output
+    public static final byte[] pro_off = {0x32, 0x00, 0x32};         //stopThread all processing
+    public static final byte[] sys_off = {0x22, 0x00, 0x22};         //stopThread all output
     public static boolean check_plot = true;
-    public static boolean check_log = false;
+    public static boolean check_log = true;
 }

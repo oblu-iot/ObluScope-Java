@@ -62,14 +62,14 @@ public class TwoWaySerialComm
     OutputStream mBufferOut = null;
     InputStream mBufferIn = null;
     String configData = "";
-    static File nonPDRFile=null;
+    static DataLogger dataLogger = null;
     // END - Added by GT Silicon - END //
     
     public TwoWaySerialComm(String sample_freq)
     {
         super();
         // BEGIN - Added by GT Silicon - BEGIN //
-        nonPDRFile = Utilities.createNewFile(sample_freq);
+            dataLogger = Utilities.createNewFile(sample_freq);
         // END - Added by GT Silicon - END //
     }
     
@@ -146,17 +146,22 @@ public class TwoWaySerialComm
             }            
         }
     }
+    
 // BEGIN - Added by GT Silicon - BEGIN //
     public static class RunInBackGround implements Runnable
     {
-        ParseData start = new ParseData();
+        ParseData parseData;
+
+        public RunInBackGround(TwoWaySerialComm twoWaySerialComm) {
+            parseData = new ParseData(twoWaySerialComm);
+        }
 
         @Override
         public void run()
         {
             if (ParseData.normal_imu)
             {
-                start.get_plot_normal();
+                parseData.get_plot_normal();
             }
         }
     }
@@ -224,10 +229,11 @@ public class TwoWaySerialComm
             System.out.println("Command:"+send);    
             
             ParseData.normal_imu = true;
-            new Thread(new RunInBackGround()).start();
+            
             TwoWaySerialComm twoWaySerialComm = new TwoWaySerialComm(samp_freq);
             twoWaySerialComm.connect(Constants.SERIAL_PORT);
             twoWaySerialComm.sendData(Utilities.convertingTobyteArray(send));
+            new Thread(new RunInBackGround(twoWaySerialComm)).start();
         }
         catch ( Exception e )
         {
