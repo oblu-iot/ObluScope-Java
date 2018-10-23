@@ -36,8 +36,6 @@ comments:
 
 package io.oblu.cube;
 
-import io.oblu.cube.Camera;
-import io.oblu.cube.TexturedShapes;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
@@ -50,7 +48,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
-import io.oblu.rxtx.Constants;
+import io.oblu.commn.Constants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
