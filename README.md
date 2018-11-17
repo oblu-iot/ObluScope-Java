@@ -10,10 +10,13 @@ ObluScope is a Java based R&D tool for oblu, which allows data logging and analy
 Following dependencies are used in implementation::
  - RXTX jar and native library from http://fizzed.com/oss/rxtx-for-java 
  - JOGL jar from https://jogamp.org/wiki/index.php/Downloading_and_installing_JOGL
+ - XChart jar from https://knowm.org/downloads/xchart/xchart-3.5.2.zip
 
 RXTX - a Java cross platform wrapper library for the serial port
 
 JOGL - Java OpenGL (JOGL) is a wrapper library that allows OpenGL to be used in the Java programming language.
+
+XChart - XChart is a light-weight and convenient library for plotting data.
 
 
 [How to run the project in Netbeans](https://github.com/oblu-iot/ObluScope-Java/blob/master/How%20to%20run%20the%20project%20in%20Netbeans%20IDE.pdf)
