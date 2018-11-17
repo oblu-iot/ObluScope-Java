@@ -59,42 +59,55 @@ public class ParseNormalImu implements Runnable{
     public static boolean time_period;
     float thetagz = 0.0f;
     public DataLogger dataLogger;
+    private RealTimePlot realTimePlot;
 
     public ParseNormalImu(Connectivity connectivity_obj)
     {
-        dataLogger = Utilities.createNewFile(Float.toString(Constants.OUTRATE));
+        if(Constants.DATA_LOG){
+            dataLogger = Utilities.createNewFile(Float.toString(Constants.OUTRATE));
+        }
         this.connectivity = connectivity_obj;
-        JFrame window = new JFrame("oblu - an open platform for wearable motion sensing");
-        window.setContentPane(panel);
-        window.pack();
-        window.setLocation(50,50);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setVisible(true);
-        panel.requestFocusInWindow();
-        window.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent we) {
-                connectivity_obj.send(Constants.PRO_OFF);
-                connectivity_obj.send(Constants.SYS_OFF);
-                connectivity_obj.close();
-                dataLogger.stopLogging();
-                try {
-                    dataLogger.join();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ParseNormalImu.class.getName()).log(Level.SEVERE, null, ex);
+        if (Constants.REAL_TIME_PLOT) {
+            this.realTimePlot = new RealTimePlot();
+            this.realTimePlot.execute();
+        }
+        if (Constants.CUBE_ANIMATION) {
+            JFrame window = new JFrame("oblu - an open platform for wearable motion sensing");
+            window.setContentPane(panel);
+            window.pack();
+            window.setLocation(720,50);
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.setVisible(true);
+            panel.requestFocusInWindow();
+            window.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent we) {
+                    connectivity_obj.send(Constants.PRO_OFF);
+                    connectivity_obj.send(Constants.SYS_OFF);
+                    connectivity_obj.close();
+                    if (Constants.DATA_LOG){
+                        dataLogger.stopLogging();
+                        try {
+                            dataLogger.join();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ParseNormalImu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    System.exit(0);
                 }
-                System.exit(0);
-            }
-        } );
+            } );
+        }
     }
     
     public void  get_plot_normal()
     {
+        long start = System.currentTimeMillis();
         int lenght, newlen;
         if (normal_imu) {
             byte[] buffer = final_buffer(Constants.DATA_LEN);
-            while (normal_imu) 
+            while ((System.currentTimeMillis() - start)/1000 < Constants.RUN_TIME) 
             {
+                System.out.println("time: "+ String.format("%.2f",(float)(System.currentTimeMillis() - start)/1000));
                 parse_data(buffer);
                 String inHex = Utilities.byte2HexStr(buffer,buffer.length).replace(" ","").trim();
 //                String patternStr = "AA.{4}1C";
@@ -111,21 +124,23 @@ public class ParseNormalImu implements Runnable{
                         gx = inertialData[3];
                         gy = inertialData[4];
                         gz = inertialData[5];
-                        if(Constants.check_plot)
+                        if (Constants.CUBE_ANIMATION)
                         {
                             filter_data = madgwick.MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
                             panel.setQuaterniunData(filter_data);
                         }
+                        if (Constants.REAL_TIME_PLOT)
+                        {
+                            realTimePlot.addData(new AccGyro(pktNum, timeStamp, ax, ay, az, gx, gy, gz));
+                        }
+                        
                         timeStamp = pkt_receive /Constants.OUTRATE;
                         counterNormal = 0;
                         pkt_receive++;
                         previousPkt = pktNum;
-                         if (Constants.check_log && dataLogger != null) 
+                        if (Constants.DATA_LOG && dataLogger != null) 
                         {
                             dataLogger.addData(new AccGyro(pktNum, timeStamp, ax, ay, az, gx, gy, gz));
-                            if (!Constants.check_plot) {
-                                System.out.println("pktNum"+pktNum);
-                            }
                         }
                     }
                     buffer = final_buffer(Constants.DATA_LEN);
@@ -161,14 +176,6 @@ public class ParseNormalImu implements Runnable{
                         break;
                     }
                 }
-//                if (!normal_imu) 
-//                {
-//                    for (String mqueue_empty = mQueue.poll(); mqueue_empty != null; mqueue_empty = mQueue.poll()) 
-//                    {
-//                        System.out.println(mqueue_empty);
-//                    }
-//                    break;
-//                }
             }
         }
     }
@@ -179,6 +186,7 @@ public class ParseNormalImu implements Runnable{
         try 
         {
             temp = connectivity.receive(len);
+//            System.out.println("read: "+ Utilities.byteArrayToString(temp, temp.length));
 //            temp = read_data(len);
         }
         catch (StringIndexOutOfBoundsException e)
@@ -234,35 +242,6 @@ public class ParseNormalImu implements Runnable{
             }
         }
     }
-
-//    byte[] read_data(int len)
-//    {
-//        byte[] byt = new byte[1];
-//        len = len * 2;
-//        while ((ble_buffer.length() < (len*2)) && normal_imu)
-//        {
-//            String data_from_queue = "";//mQueue.poll();
-//            if (data_from_queue != null) 
-//            {
-////                System.out.println("data_from_queue : "+data_from_queue);
-//                ble_buffer += data_from_queue;
-//            }
-//       }
-//        if (ble_buffer.length() > len)
-//        {
-//            String take_str =  ble_buffer.substring(0,len);
-//            byt = Utilities.hexStringToByteArray(take_str);
-//            try 
-//            {
-//                ble_buffer = ble_buffer.substring(len, ble_buffer.length());
-//            }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
-//        return byt;
-//    }
 
     private int cal_chksum(byte[] data)
     {

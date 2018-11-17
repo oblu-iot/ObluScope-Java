@@ -16,10 +16,12 @@ made
 * */
 package io.oblu.commn;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import gnu.io.CommPortIdentifier;
 import io.oblu.commn.connectivity.BLECommunication;
 import io.oblu.commn.connectivity.Connectivity;
 import io.oblu.commn.connectivity.USBComunication;
+import io.oblu.commn.connectivity.WiFiCommunication;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,12 +46,12 @@ public class Utilities {
         File nonPDRFile = new File(root, logFileName);
         DataLogger dataLogger = new DataLogger(nonPDRFile);
 //        System.out.println("File full path: "+nonPDRFile.getAbsolutePath());
-        if(Constants.check_log){
-            dataLogger.start();
-            System.out.println("Log file's full path: "+nonPDRFile.getAbsolutePath());
-            String header = String.format("%12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \n\n\n ", "PKT_No.", "TimeStamp", "ax(m/s^2)", "ay(m/s^2)", "az(m/s^2)", "gx(rad/s)", "gy(rad/s)", "gz(rad/s)");
-            writeNonPDRData(nonPDRFile,header);
-        }
+        
+        dataLogger.start();
+        System.out.println("Log file's full path: "+nonPDRFile.getAbsolutePath());
+        String header = String.format("%12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \t %12s \n\n\n ", "PKT_No.", "TimeStamp", "ax(m/s^2)", "ay(m/s^2)", "az(m/s^2)", "gx(rad/s)", "gy(rad/s)", "gz(rad/s)");
+        writeNonPDRData(nonPDRFile,header);
+        
        
         return dataLogger;
     }
@@ -169,7 +171,19 @@ public class Utilities {
         {
             connectivity = new BLECommunication(Constants.MAC_ADDRESS);
         }
+        if (Constants.CONNECTIVITY_TYPE.equals(Constants.WIFI))
+        {
+            connectivity = new WiFiCommunication(Constants.IP_ADDRESS);
+        }
         return connectivity;
     }
-    
+    public static boolean stringToBoolean(String str){
+        
+        if (str.toLowerCase().equals("true")) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

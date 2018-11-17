@@ -50,8 +50,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Main
@@ -78,11 +76,18 @@ public class Main
             Constants.CONNECTIVITY_TYPE = prop.getProperty("com.connectivity.type","usb");
             Constants.OUTRATE = Float.valueOf(prop.getProperty("com.rotate.outrate","250"));
             Constants.BAUDRATE = Integer.valueOf(prop.getProperty("com.rotate.serialbaudrate","115200"));
+            Constants.SERVERPORT = Integer.valueOf(prop.getProperty("com.rotate.ip.port","9876"));
             Constants.SHAPE = prop.getProperty("com.rotate.shape","CUBE");  
             Constants.texture = prop.getProperty("com.rotate.texture","oblu.bmp");
             Constants.SERIAL_PORT = prop.getProperty("com.rotate.serialport","/dev/ttyACM0");
             Constants.MAC_ADDRESS = prop.getProperty("com.rotate.mac.addr");
+            Constants.IP_ADDRESS = prop.getProperty("com.rotate.ip.addr");
+            Constants.CUBE_ANIMATION = Utilities.stringToBoolean(prop.getProperty("com.rotate.3d.cube.animation", "true"));
+            Constants.REAL_TIME_PLOT = Utilities.stringToBoolean(prop.getProperty("com.rotate.realtime.plot", "true"));
+            Constants.DATA_LOG = Utilities.stringToBoolean(prop.getProperty("com.rotate.data.logging", "true"));
+            Constants.RUN_TIME = Integer.valueOf(prop.getProperty("com.rotate.runtime","600"));
             String samp_freq = prop.getProperty("com.rotate.outrate","250");
+            
             float outrate = 1000 / Float.parseFloat(samp_freq);
             int[] hexval = new int[]{0x01, 0x02, 0x3, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
             int outrate_cmd = hexval[Utilities.get_ratedevider(outrate)];

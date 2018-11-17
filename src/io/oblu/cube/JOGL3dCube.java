@@ -103,7 +103,7 @@ public class JOGL3dCube extends GLJPanel implements GLEventListener, KeyListener
     
     private GLUT glut = new GLUT();
 
-
+    long timer=-1;
     /**
      * Create a TextureDemo panel to show an object with a texture, and sets up
      * the camera and trackball so that the object can be rotated with the mouse.
@@ -159,6 +159,7 @@ public class JOGL3dCube extends GLJPanel implements GLEventListener, KeyListener
             default:
                 break;
         }
+        timer = System.currentTimeMillis();
         // END - Added by GT Silicon - END //
     }
 
@@ -249,16 +250,21 @@ public class JOGL3dCube extends GLJPanel implements GLEventListener, KeyListener
     
         gl.glMultMatrixf(quaternion.toMatrix(data, 0),0);
             
+        
         textRenderer.beginRendering(500, 500);
         textRenderer.setColor(Color.YELLOW);
         textRenderer.setSmoothing(true);
-
+        long duration = (System.currentTimeMillis() - timer);
+//        float sec = duration/1000.0f;
+//        String disp_time = (duration/1000.0f)+"";
+        
         Point pt = new Point(10, 10);
         textRenderer.draw("Quaternion", 10, 90);
         textRenderer.draw("Z: "+ df3.format(quaternionData[3]), (int) (pt.x), (int) (pt.y));
         textRenderer.draw("Y: "+ df3.format(quaternionData[2]), 10, 30);
         textRenderer.draw("X: "+ df3.format(quaternionData[1]), 10, 50);
         textRenderer.draw("W: "+ df3.format(quaternionData[0]), 10, 70);
+        textRenderer.draw("Time: "+ df3.format(duration/1000.0f), 250, 550);
         textRenderer.endRendering();
         // END - Added by GT Silicon - END //
 
