@@ -19,8 +19,8 @@ JOGL - Java OpenGL (JOGL) is a wrapper library that allows OpenGL to be used in 
 XChart - XChart is a light-weight and convenient library for plotting data.
 
 
-[How to run the project in Netbeans](https://github.com/oblu-iot/ObluScope-Java/blob/master/How%20to%20run%20the%20project%20in%20Netbeans%20IDE.pdf)
+[How to run the project in Netbeans](https://www.inertialelements.com/oblu/resources/obluscope-project-setup-netbeans.pdf)
 
-[How to run the project in Eclipse](https://github.com/oblu-iot/ObluScope-Java/blob/master/How%20to%20run%20the%20project%20in%20Eclipse%20IDE.pdf)
+[How to run the project in Eclipse](https://www.inertialelements.com/oblu/resources/obluscope-project-setup-eclipse.pdf)
 
 
